@@ -1,7 +1,8 @@
+--extra-index-url https://download.pytorch.org/whl/cpu
 flask
 flask-cors
-torch
-torchvision
 pillow
+torch==2.0.1+cpu
+torchvision==0.15.2+cpu
 requests
 gunicorn
