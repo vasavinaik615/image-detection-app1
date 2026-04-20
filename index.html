@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<body style="font-family: Arial; text-align:center; margin-top:50px; background:#f5f5f5;">
+
+<h1>🌩️ AI Image Detection System</h1>
+
+<input type="file" id="fileInput" style="margin:20px;">
+<br>
+<button onclick="upload()" style="padding:10px 20px; background:black; color:white; border:none; border-radius:5px;">
+  Detect Image
+</button>
+
+<h3>Results:</h3>
+<ul id="result" style="list-style:none;"></ul>
+
+</body>
+</html><script>
+async function upload() {
+  const file = document.getElementById("fileInput").files[0];
+
+  if (!file) {
+    alert("Select an image first!");
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append("image", file);
+
+  const res = await fetch("http://127.0.0.1:5000/upload", {
+    method: "POST",
+    body: formData
+  });
+
+  const data = await res.json();
+  console.log(data);
+
+  const list = document.getElementById("result");
+  list.innerHTML = "";
+
+  if (data.error) {
+    list.innerHTML = "<li>" + data.error + "</li>";
+    return;
+  }
+
+  if (!Array.isArray(data)) {
+    list.innerHTML = "<li>Model loading... try again</li>";
+    return;
+  }
+
+  data.forEach(item => {
+    const li = document.createElement("li");
+    li.textContent = item.label + " (" + (item.score * 100).toFixed(2) + "%)";
+    list.appendChild(li);
+  });
+}
+  
+</script>
